@@ -1,0 +1,34 @@
+/* converting from args to vargs */
+
+void logger_formatted(int uid, char* str, ...){
+}
+
+/* Using Macro : No extra memory is required, but not a function call.
+ * Here, we can format the passed string format as is, and reformat it
+ * here we are formatting with process_name-pid
+ */
+#define logger(pid, format, args...) \
+do {\
+    logger_formatted(get_uid(), "<<%s-%d>> "format, get_process_name(), pid, args);\
+}while(0)
+
+/* Using a function call -
+ * 
+ *
+ *
+ */
+ void logger1(int pid, const char* string, ...){
+    char[1024] fmt;
+    va_list args;
+    //now format the old string  in to new fmt
+    snprintf(fmt, sizeof(fmt), "<< %s-%d>> %s", get_process_name(), pid, string);
+    va_start(args, string);
+    logger_formatted(get_uid(), fmt, args);
+    va_end(args);
+ }
+
+//usage
+int main(){
+  int pid = getpid();
+  logger(pid, "Entered in function : %s", __FUNCTION__);
+}
